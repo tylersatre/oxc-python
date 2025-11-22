@@ -50,19 +50,25 @@ jobs:
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Install maturin
-        run: pip install maturin
+      - name: Build wheels
+        uses: PyO3/maturin-action@v1
+        with:
+          args: --release --out dist
+          sccache: true
 
-      - name: Build and install package
+      - name: Install and test
+        shell: bash
         run: |
-          maturin build --release --out dist
-          pip install dist/*.whl
-
-      - name: Install test dependencies
-        run: pip install pytest
-
-      - name: Run tests
-        run: pytest -v
+          set -e
+          python3 -m venv .venv
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            source .venv/Scripts/activate
+          else
+            source .venv/bin/activate
+          fi
+          pip install oxc-python --find-links dist --force-reinstall
+          pip install pytest
+          pytest -v
 
   build:
     name: Build verification (Linux x86_64)
