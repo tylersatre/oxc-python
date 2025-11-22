@@ -16,7 +16,6 @@ Tests that verify Program node works with other components.
 """
 
 
-
 def test_program_with_parse_result():
     """Integration: Program is correctly embedded in ParseResult"""
     from oxc_python import parse
@@ -179,6 +178,8 @@ def test_chunkhound_error_handling_pattern():
     assert result.program is not None
     assert hasattr(result.program, "body")
     assert isinstance(result.program.body, list)
+
+
 """
 Phase 21: End-to-End ChunkHound Integration Validation
 

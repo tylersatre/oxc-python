@@ -14,7 +14,6 @@ Critical for React codebase support.
 """
 
 
-
 def find_node(program, node_type):
     """Helper to find first node of given type in AST."""
     from oxc_python import walk

@@ -1899,6 +1899,8 @@ class TestVariableDeclarator:
                 break
         else:
             pytest.fail("No VariableDeclarator found")
+
+
 """
 Phase 14: Expression Node Types - Implementation Tests
 
@@ -1914,7 +1916,6 @@ For now, we test:
 3. ChunkHound compatibility patterns
 4. get_text() and get_line_range() methods
 """
-
 
 
 class TestArrowFunctionExpression:
@@ -2837,6 +2838,8 @@ class TestExpressionTypes:
             assert isinstance(end_line, int)
             assert start_line >= 1
             assert end_line >= start_line
+
+
 """
 Phase 15: Import/Export Declaration Node Types
 
