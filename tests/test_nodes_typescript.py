@@ -6,6 +6,8 @@ validating TypeScript-specific AST nodes including type annotations, interfaces,
 type aliases, enums, and TypeScript-only syntax.
 """
 
+from oxc_python import parse, walk
+
 """
 Phase 16: TypeScript-Specific AST Nodes
 
@@ -16,9 +18,6 @@ This phase is critical for ChunkHound integration, as it explicitly maps:
 - TSTypeAliasDeclaration -> ChunkType.TYPE
 - TSInterfaceDeclaration -> ChunkType.INTERFACE
 """
-
-
-from oxc_python import parse, walk
 
 
 def find_node(program, node_type):
@@ -1259,7 +1258,8 @@ class TestTypeScriptAdvancedTypes:
         # TSIntersectionType should appear in walk
         node_types = [node.type for node, _ in walk(result.program)]
         assert "TSIntersectionType" in node_types, (
-            f"TSIntersectionType should appear in walk() for intersection type. Found types: {node_types}"
+            f"TSIntersectionType should appear in walk() for intersection type. "
+            f"Found types: {node_types}"
         )
 
     def test_complex_union_intersection(self):

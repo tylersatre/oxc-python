@@ -9,6 +9,9 @@ These tests validate complete workflows and integration patterns that ChunkHound
 will use, including parse → walk → extract patterns and allocator reuse.
 """
 
+import time
+from pathlib import Path
+
 """
 Phase 9 Integration Tests
 
@@ -188,9 +191,6 @@ all integration requirements work together correctly.
 
 This is the FINAL VALIDATION before v0.1 release.
 """
-
-import time
-from pathlib import Path
 
 # ==============================================================================
 # BLOCKER-1: ParseResult Structure

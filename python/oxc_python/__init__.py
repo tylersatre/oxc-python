@@ -5,6 +5,6 @@ This package provides high-performance parsing for JavaScript, TypeScript,
 JSX, and TSX source code using the oxc Rust parser.
 """
 
-from .oxc_python import *  # Import from Rust extension
+from .oxc_python import *  # noqa: F403  # Import from Rust extension
 
-__all__ = ["__version__"]
+__all__ = ["__version__"]  # noqa: F405

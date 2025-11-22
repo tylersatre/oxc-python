@@ -14,7 +14,6 @@ Combines tests from:
 
 import pytest
 
-
 # ==============================================================================
 # Basic Import and Smoke Tests
 # ==============================================================================
@@ -397,6 +396,7 @@ def test_chunkhound_js_file_pattern():
 def test_chunkhound_source_type_detection_logic():
     """ChunkHound pattern: source type detection logic."""
     from pathlib import Path
+
     import oxc_python
 
     def detect_source_type(file_path: Path) -> str:
@@ -451,6 +451,7 @@ def test_chunkhound_allocator_with_source_type():
 def test_chunkhound_complete_source_type_workflow():
     """ChunkHound pattern: complete source type workflow."""
     from pathlib import Path
+
     import oxc_python
 
     class MockChunkHound:

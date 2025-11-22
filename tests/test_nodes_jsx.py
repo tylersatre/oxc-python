@@ -848,7 +848,10 @@ class TestJSXInConditionals:
     """Tests for JSX inside conditional expressions."""
 
     def test_ternary_with_jsx_both_branches(self):
-        """RED: const x = condition ? <div>Yes</div> : <span>No</span> - both JSXElements should appear."""
+        """RED: const x = condition ? <div>Yes</div> : <span>No</span>.
+
+        Both JSXElements should appear.
+        """
         from oxc_python import parse, walk
 
         source = "const x = condition ? <div>Yes</div> : <span>No</span>;"

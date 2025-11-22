@@ -10,6 +10,8 @@ These tests validate JavaScript-specific AST node structures for statements,
 expressions, and module import/export declarations.
 """
 
+import pytest
+
 """
 Phase 13: Statement Node Types - RED Phase Tests
 
@@ -18,8 +20,6 @@ Tests for specialized statement nodes with proper fields:
 - ClassDeclaration (name, superclass, body)
 - VariableDeclaration (kind: const/let/var, declarations)
 """
-
-import pytest
 
 
 class TestFunctionDeclarationStructure:
@@ -904,7 +904,10 @@ class TestForOfStatement:
         """RED: for await...of should have is_await=True."""
         import oxc_python
 
-        source = "async function test() { for await (const item of asyncIterator) { console.log(item); } }"
+        source = (
+            "async function test() { "
+            "for await (const item of asyncIterator) { console.log(item); } }"
+        )
         result = oxc_python.parse(source, source_type="module")
 
         for node, _ in oxc_python.walk(result.program):
@@ -1589,7 +1592,10 @@ class TestContinueStatement:
         """RED: ContinueStatement with label."""
         import oxc_python
 
-        source = "outer: for (let i = 0; i < 10; i++) { for (let j = 0; j < 10; j++) { continue outer; } }"
+        source = (
+            "outer: for (let i = 0; i < 10; i++) { "
+            "for (let j = 0; j < 10; j++) { continue outer; } }"
+        )
         result = oxc_python.parse(source, source_type="module")
 
         continue_with_label = None
@@ -2452,8 +2458,8 @@ class TestLiteral:
         assert lit_node.raw == "null"
 
 
-class TestChunkHoundIntegration:
-    """Tests for ChunkHound compatibility - CRITICAL."""
+class TestChunkHoundExpressionIntegration:
+    """Tests for ChunkHound expression compatibility - CRITICAL."""
 
     def test_chunkhound_arrow_function_type_mapping(self):
         """
@@ -2846,8 +2852,6 @@ Phase 15: Import/Export Declaration Node Types
 Tests for ES module import/export statement nodes.
 CRITICAL: ImportDeclaration needed for ChunkHound's HIGH-1 requirement.
 """
-
-import pytest
 
 
 def test_import_declaration_exists():
