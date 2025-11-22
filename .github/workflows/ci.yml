@@ -56,6 +56,8 @@ jobs:
           args: --release --out dist -i python
           sccache: true
           manylinux: auto
+        env:
+          PYO3_PYTHON: python
 
       - name: Install and test
         shell: bash
