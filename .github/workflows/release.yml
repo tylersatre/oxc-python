@@ -19,8 +19,8 @@ jobs:
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             manylinux: "2014"
-          # Linux aarch64
-          - os: ubuntu-latest
+          # Linux aarch64 (native ARM64)
+          - os: ubuntu-24.04-arm
             target: aarch64-unknown-linux-gnu
             manylinux: "2014"
           # macOS universal2 (Intel + Apple Silicon)
@@ -52,19 +52,12 @@ jobs:
           echo "Updated Cargo.toml version:"
           grep "^version = " Cargo.toml
 
-      - name: Set up QEMU (for aarch64)
-        if: matrix.target == 'aarch64-unknown-linux-gnu'
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
           command: build
           args: --release --out dist --target ${{ matrix.target }}
           manylinux: ${{ matrix.manylinux || 'auto' }}
-          docker-options: ${{ matrix.target == 'aarch64-unknown-linux-gnu' && '--platform linux/arm64' || '' }}
 
       - name: Upload wheels
         uses: actions/upload-artifact@v5
