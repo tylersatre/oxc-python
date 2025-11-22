@@ -55,6 +55,7 @@ jobs:
         with:
           args: --release --out dist
           sccache: true
+          manylinux: auto
 
       - name: Install and test
         shell: bash
@@ -81,7 +82,7 @@ jobs:
         with:
           command: build
           args: --release --out dist
-          manylinux: "2_28"
+          manylinux: "2014"
 
       - name: Upload wheel artifact
         uses: actions/upload-artifact@v5
