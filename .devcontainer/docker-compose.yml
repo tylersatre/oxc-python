@@ -1,0 +1,22 @@
+services:
+  dev:
+    container_name: oxc-python
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    stdin_open: true
+    tty: true
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp=unconfined
+    volumes:
+      - ..:/workspaces/oxc-python
+      - uv-cache:/home/vscode/.cache/uv
+      - cargo-registry:/home/vscode/.cargo/registry
+      - cargo-git:/home/vscode/.cargo/git
+
+volumes:
+  uv-cache:
+  cargo-registry:
+  cargo-git:

@@ -1,0 +1,38 @@
+{
+  "name": "oxc-python dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspaces/oxc-python",
+  "remoteUser": "vscode",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "python.testing.pytestEnabled": true,
+        "python.testing.pytestArgs": [
+          "tests"
+        ],
+        "editor.formatOnSave": true,
+        "[python]": {
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        },
+        "ruff.lint.enable": true,
+        "ruff.format.enable": true
+      },
+      "extensions": [
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "rust-lang.rust-analyzer",
+        "openai.chatgpt",
+        "anthropic.claude-code"
+      ]
+    }
+  },
+  "updateContentCommand": "sudo chown -R vscode:vscode /home/vscode/.cache /home/vscode/.cargo",
+  "postCreateCommand": "uv sync",
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "4gb"
+  }
+}

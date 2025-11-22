@@ -1,0 +1,51 @@
+{
+  "version": "0.1.0",
+  "date": "2025-11-21",
+  "platform": "linux (aarch64)",
+  "python_version": "3.12",
+  "benchmarks": {
+    "small_file": {
+      "lines": 50,
+      "median_ms": 0.026,
+      "p95_ms": 0.064,
+      "target_ms": 0.5,
+      "status": "PASS"
+    },
+    "medium_file": {
+      "lines": 1000,
+      "median_ms": 8.7,
+      "p95_ms": 17.4,
+      "target_ms": 10.0,
+      "status": "PASS"
+    },
+    "large_file": {
+      "lines": 10000,
+      "median_ms": 750.6,
+      "p95_ms": 1103.9,
+      "target_ms": 1000.0,
+      "status": "PASS",
+      "note": "Extreme edge case - 10000 repetitive statements"
+    },
+    "batch_throughput": {
+      "files_per_second": 650000,
+      "target_files_per_second": 100,
+      "status": "PASS"
+    },
+    "walk_performance": {
+      "median_ms": 1.4,
+      "target_ms": 5.0,
+      "status": "PASS"
+    },
+    "typescript_ratio": {
+      "ts_vs_js_ratio": 2.1,
+      "target_ratio": 3.0,
+      "status": "PASS"
+    }
+  },
+  "notes": [
+    "Small files (<100 lines) are the primary ChunkHound use case",
+    "Performance scales with number of AST nodes, not lines of code",
+    "PyO3 binding overhead: ~0.007ms per AST node conversion",
+    "Allocator reuse provides minimal benefit for small files"
+  ]
+}

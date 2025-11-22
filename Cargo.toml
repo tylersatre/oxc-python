@@ -1,0 +1,24 @@
+[package]
+name = "oxc-python"
+version = "0.0.0"
+edition = "2021"
+authors = ["oxc-python contributors"]
+license = "MIT"
+description = "Python bindings for the Oxc JavaScript/TypeScript tooling written in Rust."
+repository = "https://github.com/tylersatre/oxc-python"
+
+[lib]
+name = "oxc_python"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.27", features = ["extension-module", "abi3-py310"] }
+oxc_allocator = "0.97"
+oxc_parser = "0.97"
+oxc_ast = "0.97"
+oxc_span = "0.97"
+oxc_diagnostics = "0.97"
+
+[build-dependencies]
+pyo3-build-config = "0.27"

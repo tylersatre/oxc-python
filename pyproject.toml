@@ -1,0 +1,79 @@
+[project]
+name = "oxc-python"
+dynamic = ["version"]
+description = "Fast Python bindings for the oxc JavaScript/TypeScript parser"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Tyler Satre", email = "tyler@example.com" }]
+keywords = ["parser", "javascript", "typescript", "ast", "oxc", "rust"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Compilers",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/tylersatre/oxc-python"
+Documentation = "https://github.com/tylersatre/oxc-python#readme"
+Repository = "https://github.com/tylersatre/oxc-python"
+Issues = "https://github.com/tylersatre/oxc-python/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+    "maturin>=1,<2"
+]
+
+[build-system]
+requires = ["maturin>=1,<2"]
+build-backend = "maturin"
+
+[tool.maturin]
+# Use PyO3 for bindings
+bindings = "pyo3"
+# Build a single abi3 wheel compatible with Python 3.10+
+compatibility = "manylinux_2_28"
+strip = true
+# Python package configuration
+python-source = "python"
+module-name = "oxc_python"
+include = ["python/oxc_python/py.typed"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest",
+    "ruff",
+    "maturin>=1,<2"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "I"]
+ignore = []
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 88
