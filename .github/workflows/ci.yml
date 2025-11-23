@@ -53,11 +53,8 @@ jobs:
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
-          args: --release --out dist -i python
+          args: --release --out dist
           sccache: true
-          manylinux: auto
-        env:
-          PYO3_PYTHON: python
 
       - name: Install and test
         shell: bash
@@ -71,7 +68,7 @@ jobs:
           fi
           pip install oxc-python --find-links dist --force-reinstall
           pip install pytest
-          pytest -v
+          pytest -v -m "not benchmark"
 
   build:
     name: Build verification (Linux x86_64)

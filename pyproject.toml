@@ -61,6 +61,10 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+markers = [
+    "benchmark: marks tests as benchmarks (deselect with '-m \"not benchmark\"')",
+    "slow: marks tests as slow running (deselect with '-m \"not slow\"')"
+]
 
 [tool.ruff]
 line-length = 100
