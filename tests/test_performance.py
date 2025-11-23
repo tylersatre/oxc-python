@@ -6,8 +6,9 @@ not quadratically (O(n²)) as it did before the line offset table optimization.
 """
 
 import time
-import pytest
+
 import oxc_python
+import pytest
 
 
 def generate_js_file(size_kb: int) -> str:
@@ -81,7 +82,6 @@ def test_linear_scaling_1kb_to_10kb():
     time_10kb = measure_parse_time(source_10kb)
 
     # Calculate scaling factor
-    size_ratio = 10  # 10KB / 1KB
     time_ratio = time_10kb / time_1kb if time_1kb > 0 else 0
 
     # For linear O(n) scaling:
@@ -110,7 +110,6 @@ def test_linear_scaling_10kb_to_100kb():
     time_100kb = measure_parse_time(source_100kb)
 
     # Calculate scaling factor
-    size_ratio = 10  # 100KB / 10KB
     time_ratio = time_100kb / time_10kb if time_10kb > 0 else 0
 
     # Linear: ~10x, Quadratic: ~100x
@@ -134,7 +133,6 @@ def test_linear_scaling_100kb_to_1mb():
     time_1mb = measure_parse_time(source_1mb, iterations=2)
 
     # Calculate scaling factor
-    size_ratio = 10  # 1MB / 100KB
     time_ratio = time_1mb / time_100kb if time_100kb > 0 else 0
 
     # Linear: ~10x, Quadratic: ~100x

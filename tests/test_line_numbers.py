@@ -5,9 +5,7 @@ Tests for the line number computation functionality that will replace
 the O(n²) compute_line_number with O(1) lookup using a line offset table.
 """
 
-import pytest
 import oxc_python
-
 
 # ==============================================================================
 # Basic Line Number Computation Tests
