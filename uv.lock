@@ -57,8 +57,7 @@ wheels = [
 ]
 
 [[package]]
-name = "oxc-py"
-version = "0.1.0"
+name = "oxc-python"
 source = { editable = "." }
 
 [package.optional-dependencies]

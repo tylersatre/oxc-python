@@ -4,6 +4,7 @@ use oxc_allocator::Allocator as OxcAllocator;
 use oxc_parser::Parser;
 use oxc_span::SourceType;
 use pyo3::prelude::*;
+use std::cell::RefCell;
 
 use crate::{
     Allocator, Comment, ParseError, ParseResult, Program, Span,
@@ -11,12 +12,49 @@ use crate::{
 };
 
 // =============================================================================
-// Phase 12: Line Number Computation
+// Phase 12: Line Number Computation - O(1) Lookup via Thread-Local Storage
 // =============================================================================
+
+thread_local! {
+    /// Thread-local storage for line offset table.
+    /// Contains a Vec where index = byte offset, value = line number.
+    /// This allows O(1) lookup instead of O(n) scanning.
+    static LINE_OFFSETS: RefCell<Option<Vec<usize>>> = RefCell::new(None);
+}
+
+/// Build a line offset table for O(1) line number lookups.
+///
+/// Creates a Vec<usize> where index = byte offset, value = line number.
+/// This is built once per parse and stored in thread-local storage.
+///
+/// Time complexity: O(n) where n = source length
+/// Space complexity: O(n) - 8 bytes per source byte on 64-bit systems
+///
+/// Args:
+///     source: Source code string
+///
+/// Returns:
+///     Vec where vec[byte_offset] = line_number (1-indexed)
+fn build_line_offset_table(source: &str) -> Vec<usize> {
+    let len = source.len();
+    let mut table = Vec::with_capacity(len);
+    let mut current_line = 1;
+
+    for c in source.chars() {
+        table.push(current_line);
+        if c == '\n' {
+            current_line += 1;
+        }
+    }
+
+    table
+}
 
 /// Compute line number from byte offset.
 ///
-/// Counts newline characters before the offset to determine the line number.
+/// Uses thread-local line offset table for O(1) lookup if available,
+/// otherwise falls back to O(n) scanning for compatibility.
+///
 /// Line numbers are 1-indexed (first line is 1, not 0).
 ///
 /// Args:
@@ -26,9 +64,20 @@ use crate::{
 /// Returns:
 ///     1-indexed line number
 pub fn compute_line_number(source: &str, offset: usize) -> usize {
-    let safe_offset = offset.min(source.len());
-    // Count '\n' characters (works for both LF and CRLF since '\n' is in both)
-    source[..safe_offset].chars().filter(|&c| c == '\n').count() + 1
+    // Try thread-local lookup first (O(1))
+    LINE_OFFSETS.with(|offsets_cell| {
+        if let Some(ref table) = *offsets_cell.borrow() {
+            // Fast path: O(1) lookup
+            let safe_offset = offset.min(table.len().saturating_sub(1));
+            if safe_offset < table.len() {
+                return table[safe_offset];
+            }
+        }
+
+        // Fallback: O(n) scanning (for compatibility if table not set)
+        let safe_offset = offset.min(source.len());
+        source[..safe_offset].chars().filter(|&c| c == '\n').count() + 1
+    })
 }
 
 // =============================================================================
@@ -181,6 +230,13 @@ pub fn parse(py: Python, source: &str, allocator: Option<&Allocator>, source_typ
         }
     };
 
+    // Step 1.5: Build line offset table for O(1) line number lookups
+    // This replaces O(n²) behavior with O(n) by building the table once
+    let line_offsets = build_line_offset_table(source);
+    LINE_OFFSETS.with(|offsets_cell| {
+        *offsets_cell.borrow_mut() = Some(line_offsets);
+    });
+
     // Step 2: Create parser with appropriate source type
     // Parse source_type string and construct oxc SourceType with TypeScript support
     let oxc_source_type = match source_type {
@@ -191,6 +247,11 @@ pub fn parse(py: Python, source: &str, allocator: Option<&Allocator>, source_typ
         Some("typescript") | Some("ts") => SourceType::ts(),
         None => SourceType::mjs(),  // Default: JS module
         Some(invalid) => {
+            // Clean up thread-local storage before returning error
+            LINE_OFFSETS.with(|offsets_cell| {
+                *offsets_cell.borrow_mut() = None;
+            });
+
             // Reject invalid source_type values
             return Err(pyo3::exceptions::PyValueError::new_err(format!(
                 "Invalid source_type: '{}'. Must be 'tsx', 'jsx', 'module', 'script', 'ts', or 'typescript'",
@@ -235,6 +296,11 @@ pub fn parse(py: Python, source: &str, allocator: Option<&Allocator>, source_typ
 
     // Get panicked flag before parse_result is consumed
     let panicked = parse_result.panicked;
+
+    // Clean up thread-local line offset table
+    LINE_OFFSETS.with(|offsets_cell| {
+        *offsets_cell.borrow_mut() = None;
+    });
 
     Ok(ParseResult {
         program: Some(program.into_any()),
