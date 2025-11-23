@@ -53,7 +53,7 @@ jobs:
       - name: Build wheels
         uses: PyO3/maturin-action@v1
         with:
-          args: --release --out dist
+          args: --release --out dist --skip-auditwheel
           sccache: true
 
       - name: Install and test
