@@ -34,7 +34,7 @@ def test_single_line_all_offsets_line_1():
 
     # Walk through all nodes
     for node in oxc_python.walk(result.program):
-        if hasattr(node, 'start_line') and hasattr(node, 'end_line'):
+        if hasattr(node, "start_line") and hasattr(node, "end_line"):
             assert node.start_line == 1
             assert node.end_line == 1
 

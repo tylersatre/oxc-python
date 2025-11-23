@@ -93,7 +93,7 @@ def test_linear_scaling_1kb_to_10kb():
 
     assert time_ratio < 20, (
         f"Scaling appears quadratic: 10x size took {time_ratio:.1f}x time "
-        f"(1KB: {time_1kb*1000:.2f}ms, 10KB: {time_10kb*1000:.2f}ms). "
+        f"(1KB: {time_1kb * 1000:.2f}ms, 10KB: {time_10kb * 1000:.2f}ms). "
         f"Expected <20x for linear scaling, would be ~100x for quadratic."
     )
 
@@ -116,7 +116,7 @@ def test_linear_scaling_10kb_to_100kb():
     # Linear: ~10x, Quadratic: ~100x
     assert time_ratio < 20, (
         f"Scaling appears quadratic: 10x size took {time_ratio:.1f}x time "
-        f"(10KB: {time_10kb*1000:.2f}ms, 100KB: {time_100kb*1000:.2f}ms). "
+        f"(10KB: {time_10kb * 1000:.2f}ms, 100KB: {time_100kb * 1000:.2f}ms). "
         f"Expected <20x for linear scaling."
     )
 
@@ -140,7 +140,7 @@ def test_linear_scaling_100kb_to_1mb():
     # Linear: ~10x, Quadratic: ~100x
     assert time_ratio < 20, (
         f"Scaling appears quadratic: 10x size took {time_ratio:.1f}x time "
-        f"(100KB: {time_100kb*1000:.2f}ms, 1MB: {time_1mb*1000:.2f}ms). "
+        f"(100KB: {time_100kb * 1000:.2f}ms, 1MB: {time_1mb * 1000:.2f}ms). "
         f"Expected <20x for linear scaling."
     )
 
@@ -185,14 +185,14 @@ def test_small_file_performance():
 
     # 5KB file should parse in <50ms (very generous - likely much faster)
     assert time_taken < 0.05, (
-        f"Small file (5KB) parsing too slow: {time_taken*1000:.2f}ms. "
-        f"Expected <50ms."
+        f"Small file (5KB) parsing too slow: {time_taken * 1000:.2f}ms. Expected <50ms."
     )
 
 
 @pytest.mark.benchmark
 def test_typescript_file_scaling():
     """Verify TypeScript files also scale linearly."""
+
     # Generate TypeScript code with type annotations
     def generate_ts_file(size_kb: int) -> str:
         num_statements = (size_kb * 1024) // 50  # TS statements are a bit longer
